@@ -1,0 +1,17 @@
+diff --git a/node_modules/koa/lib/request.js b/node_modules/koa/lib/request.js
+index be802f5..d0740ab 100644
+--- a/node_modules/koa/lib/request.js
++++ b/node_modules/koa/lib/request.js
+@@ -454,7 +454,11 @@ module.exports = {
+     if (!this[IP]) {
+       this[IP] = this.ips[0] || this.socket.remoteAddress || ''
+     }
+-    return this[IP]
++    let _ip = this[IP];
++    if (_ip && _ip.includes(".") && _ip.includes(":")) { // fix azure X-Forwarded-For that has port in it
++      return _ip.split(":")[0];
++    }
++    return _ip;
+   },
+ 
+   set ip (_ip) {
